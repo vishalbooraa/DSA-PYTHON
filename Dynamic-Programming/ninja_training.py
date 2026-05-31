@@ -1,25 +1,28 @@
-def find(r,pc,matrix,dp):
-    if r<0:
+def find(day, last_task, points, dp):
+    if day < 0:
         return 0
-    if dp[r][pc]!=-1:
-        return dp[r][pc]
-    maxm=float("-inf")
-    for i in range(len(matrix[0])):
-        if i!=pc:
-            curr=matrix[r][i]+find(r-1,i,matrix,dp)
-            maxm=max(maxm,curr)
-    dp[r][pc]=maxm
-    return dp[r][pc]
+
+    if dp[day][last_task] != -1:
+        return dp[day][last_task]
+
+    max_points = float("-inf")
+
+    for task in range(len(points[0])):
+        if task != last_task:
+            current_points = points[day][task] + find(day - 1, task, points, dp)
+            max_points = max(max_points, current_points)
+
+    dp[day][last_task] = max_points
+    return dp[day][last_task]
 
 
+def ninja_training(points):
+    total_days = len(points)
+    total_tasks = len(points[0])
 
-def ninja_training(matrix):
-    n=len(matrix)
-    col=len(matrix[0])
-    dp=[[-1]*(col+1) for i in range(n)]
-    return find(n-1,col,matrix,dp)
+    dp = [[-1] * (total_tasks + 1) for _ in range(total_days)]
 
-
+    return find(total_days - 1, total_tasks, points, dp)
 
 
 print(ninja_training([[10, 40, 70], [20, 50, 80], [30, 60, 90]]))
